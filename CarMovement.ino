@@ -43,36 +43,61 @@ void loop() {
   Serial.print(" ");
   Serial.println(rightRead);
 
-  if(leftRead > 700 && rightRead > 700 && middleRead > 700)
+  if(leftRead > 700 && middleRead > 800 && rightRead > 800) //stop
   {
     //check if all three analog reads are a high value
-    digitalWrite(topLeftLight, LOW);
+    digitalWrite(topLeftLight, HIGH);
     digitalWrite(topMiddleLight, LOW);
-    digitalWrite(topRightLight, LOW);
+    digitalWrite(topRightLight, HIGH);
     
     while(true)
-    {
+    {      
       analogWrite(rightMotor, 0);
       analogWrite(leftMotor, 0);
     }
   }
-  else if(leftRead > 700) //turn left
+  else if (middleRead > 800) {
+      digitalWrite(topLeftLight, LOW);
+      digitalWrite(topMiddleLight, HIGH);
+      digitalWrite(topRightLight, LOW);
+      analogWrite(rightMotor, 240);
+      analogWrite(leftMotor,240);
+  }
+  else if(leftRead > 550) //turn left
   {
     digitalWrite(topLeftLight, HIGH);
     digitalWrite(topMiddleLight, LOW);
     digitalWrite(topRightLight, LOW);
-  
-    analogWrite(rightMotor, 240);
-    analogWrite(leftMotor, 0);
+
+    if(middleRead > 650) //slight left
+    {  
+      analogWrite(rightMotor, 240);
+      analogWrite(leftMotor, 100);
+      //Serial.println("slight left");
+    }
+    else
+    {
+      analogWrite(rightMotor, 240);
+      analogWrite(leftMotor, 0);
+    }
   }
   else if(rightRead > 700) //turn right
   {
     digitalWrite(topLeftLight, LOW);
     digitalWrite(topMiddleLight, LOW);
     digitalWrite(topRightLight, HIGH);
-  
-    analogWrite(rightMotor, 0);
-    analogWrite(leftMotor, 240);
+    
+    if(middleRead > 650) //slight right
+    {  
+      analogWrite(rightMotor, 100);
+      analogWrite(leftMotor, 240);
+      //Serial.println("slight right");
+    }
+    else
+    {
+      analogWrite(rightMotor, 0);
+      analogWrite(leftMotor, 240);
+    }
   }
   else //move straight
   {
@@ -80,7 +105,7 @@ void loop() {
     digitalWrite(topMiddleLight, HIGH);
     digitalWrite(topRightLight, LOW);
   
-    analogWrite(rightMotor, 150);
-    analogWrite(leftMotor, 150);
+    analogWrite(rightMotor, 240);
+    analogWrite(leftMotor, 240);
   }
 }
